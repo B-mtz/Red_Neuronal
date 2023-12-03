@@ -30,13 +30,6 @@ public class NeuronalNetwork {
         backPropagation();
         newWeights();
         newBias();
-
-        for (int i = 0; i < 10; i++) {
-            feedForward();
-            backPropagation();
-            newWeights();
-            newBias();
-        }
         printNeurons();
         printConnections();
     }

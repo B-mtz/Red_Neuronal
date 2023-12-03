@@ -1,3 +1,5 @@
+import data.CSVReader;
+
 import java.util.ArrayList;
 
 public class Execute {
@@ -23,5 +25,7 @@ public class Execute {
 
         NeuronalNetwork network = new NeuronalNetwork(topologia,entradas,targets);
         network.execute();
+
+        CSVReader csvReader = new CSVReader();
     }
 }
