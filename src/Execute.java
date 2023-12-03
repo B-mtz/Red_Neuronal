@@ -14,11 +14,14 @@ public class Execute {
         //------------Entradas------------
         entradas.add(0.1);
         entradas.add(0.5);
+        entradas.add(0.1);
+        entradas.add(0.5);
 
         //------------Salidas------------
         targets.add(0.05);
         targets.add(0.95);
 
         NeuronalNetwork network = new NeuronalNetwork(topologia,entradas,targets);
+        network.execute();
     }
 }

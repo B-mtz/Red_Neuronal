@@ -14,10 +14,6 @@ public class Connection {
         return neuron;
     }
 
-    public void setNeuron(Neuron neuron) {
-        this.neuron = neuron;
-    }
-
     public double getWeight() {
         return weight;
     }
