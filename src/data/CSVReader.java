@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReader {
-    private static final String filePath = "src/data/Iris.csv";
-    public static List<String[]> readCSV() {
-        List<String[]> lines = new ArrayList<>();
+    List<String[]> lines;
+    public List<String[]> readCSV(String filePath) {
+        lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -23,11 +23,10 @@ public class CSVReader {
     }
 
     public void printData() {
-        List<String[]> data = readCSV();
         // Imprimir los datos
-        for (String[] row : data) {
+        for (String[] row : lines) {
             for (String value : row) {
-                System.out.print(value + "");
+                System.out.print(value + "_");
             }
             System.out.println();
         }

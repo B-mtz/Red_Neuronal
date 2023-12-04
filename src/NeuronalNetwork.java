@@ -9,8 +9,7 @@ public class NeuronalNetwork {
     private ArrayList<Double> inputs, targets;
     private LinkedList<Neuron> neurons;
     private Double totalError;
-    private static final int MAX_RANGE = 1;
-    private static final double LEARNING_FACTOR = 0.6;
+    private static final double MAX_RANGE = 0.2,LEARNING_FACTOR = 0.6;
 
     public NeuronalNetwork(ArrayList<Integer> topology, ArrayList<Double> inputs, ArrayList<Double> targets) {
         this.topology = topology;
@@ -18,58 +17,51 @@ public class NeuronalNetwork {
         this.targets = targets;
         this.neurons = new LinkedList<>();
         this.totalError = 0.0;
+        neuronGenerator();
+        connectionGenerator();
     }
 
-    public void execute() {
-        //neuronGenerator();
-        test();
-        printNeurons();
-        //connectionGenerator();
-        printConnections();
-        feedForward();
-        backPropagation();
-        newWeights();
-        newBias();
-        printNeurons();
-        printConnections();
+    public void executeTraining() {
+        feedForward();//Propagacion hacia adelante
+        backPropagation();//Propagacion hacia atras
+        newWeights();//Actualizacion de pesos
+        newBias();//Actualizacion de vias
+    }
+    public void executeTest() {
+        feedForward();//Propagacion hacia adelante
+        int count1 = 1, count2 = 1;
+        for (Neuron n : neurons){
+            if (n.getLayer() == topology.size()-1){
+                System.out.print("            Target "+count1+" : "+n.getValue());
+                count1++;
+                System.out.print("  -->  ");
+                System.out.print("  Output O"+count2+" : "+ n.getOutput());
+                count2++;
+            }
+        }
+        System.out.println(" ");
     }
 
-    //Clase para probar que funcionen: progrpacion hacia adelante y atras, error total, error conmutado, nuevos valores de w y b
-    private void test() {
-        Neuron i1 = new Neuron("i1", 0, 0.1, 0);
-        Neuron i2 = new Neuron("i2", 0, 0.5, 0);
-        Neuron h1 = new Neuron("h1", 1, 0.25);
-        Neuron h2 = new Neuron("h2", 1, 0.25);
-        Neuron o1 = new Neuron("o1", 2, 0.05, 0.35);
-        Neuron o2 = new Neuron("o2", 2, 0.95, 0.35);
-        //Conexiones hacia adelante:
-        i1.getFrontConnections().add(new Connection(h1, 0.1));
-        i1.getFrontConnections().add(new Connection(h2, 0.2));
-        i2.getFrontConnections().add(new Connection(h1, 0.3));
-        i2.getFrontConnections().add(new Connection(h2, 0.4));
-        h1.getFrontConnections().add(new Connection(o1, 0.5));
-        h1.getFrontConnections().add(new Connection(o2, 0.7));
-        h2.getFrontConnections().add(new Connection(o1, 0.6));
-        h2.getFrontConnections().add(new Connection(o2, 0.8));
-        //Conexiones hacia atras
-        o1.getBackConnections().add(new Connection(h1, 0.5));
-        o1.getBackConnections().add(new Connection(h2, 0.6));
-        o2.getBackConnections().add(new Connection(h1, 0.7));
-        o2.getBackConnections().add(new Connection(h2, 0.8));
-        h1.getBackConnections().add(new Connection(i1, 0.1));
-        h1.getBackConnections().add(new Connection(i2, 0.3));
-        h2.getBackConnections().add(new Connection(i1, 0.2));
-        h2.getBackConnections().add(new Connection(i2, 0.4));
-        //Neuronas
-        neurons.add(i1);
-        neurons.add(i2);
-        neurons.add(h1);
-        neurons.add(h2);
-        neurons.add(o1);
-        neurons.add(o2);
-
+    //Remplaza los datos de entrada y salida
+    public void replaceInputs(ArrayList<Double> inputs){
+        int aux = 0;
+        for (Neuron n : neurons){
+            if (n.getLayer() == 0){
+                n.setValue(inputs.get(aux));
+                aux++;
+            }
+        }
     }
-
+    //Remplaza los datos de salida
+    public void replaceTargets(ArrayList<Double> targets){
+        int aux = 0;
+        for (Neuron n : neurons){
+            if (n.getLayer() == topology.size()-1){
+                n.setValue(targets.get(aux));
+                aux++;
+            }
+        }
+    }
     //Crear las neuronas con bias aletorios
     private void neuronGenerator() {
         int contInput = 1, contOutput = 1, contW = 1;
@@ -211,7 +203,6 @@ public class NeuronalNetwork {
     }
 
     //Calcula los nuevos valores para las bias B
-
     private void newBias() {
         for (int i = neurons.size() - 1; i >= 0; i--) {
             if (neurons.get(i).getLayer() != 0){
@@ -221,14 +212,13 @@ public class NeuronalNetwork {
         }
     }
 
-
     //Genera valores aleatorios con un ranto 0.1 a MAX_RANGE = 10
     private double randomValue() {
         return Math.random() * (MAX_RANGE - 0.1) + 0.1;
     }
 
     //Imprime las neuronas
-    private void printNeurons() {
+    public void printNeurons() {
         System.out.println("\nCantidad de neuronas : " + neurons.size());
         System.out.println("--------------------------------------------------------------------NEURONAS--------------------------------------------------------------------");
         for (Neuron n : neurons) {
@@ -238,12 +228,11 @@ public class NeuronalNetwork {
     }
 
     //Imprime las conexiones
-    private void printConnections() {
+    public void printConnections() {
         System.out.println("\n--------------------------------------CONEXIONES---------------------------------------");
         for (Neuron n : neurons) {
             n.printConnections();
         }
         System.out.println("---------------------------------------------------------------------------------------");
     }
-
 }

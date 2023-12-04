@@ -81,6 +81,9 @@ public class Neuron {
         return layer;
     }
 
+    public void setValue(double value) {
+        this.value = value;
+    }
 
     public String getName() {
         return name;
@@ -100,6 +103,8 @@ public class Neuron {
         if (frontConnections.isEmpty()) {
             System.out.printf("%40s  %10s", "Sin conexiones hacia adelante", " ");
         }
+        System.out.print("|  \n");
+        /*
         System.out.printf("|  \n| %-15s Conexiones <--: ", " ");
         for (int i = 0; i < backConnections.size(); i++) {
             System.out.printf(" [ %-2s = Peso: %-10s] ", backConnections.get(i).getNeuron().getName(), formatDouble.format(backConnections.get(i).getWeight()));
@@ -108,6 +113,6 @@ public class Neuron {
             System.out.printf(" %36s %15s \n", "Sin conexiones hacia atras", "|");
         } else {
             System.out.print("|\n");
-        }
+        }*/
     }
 }
