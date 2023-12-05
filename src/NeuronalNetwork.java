@@ -3,31 +3,107 @@ import Model.Neuron;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class NeuronalNetwork {
     private ArrayList<Integer> topology;
     private ArrayList<Double> inputs, targets;
     private LinkedList<Neuron> neurons;
+    private List<String[]> data;
     private Double totalError;
-    private static final double MAX_RANGE = 0.2,LEARNING_FACTOR = 0.6;
+    private int percentage;
+    private static final double MAX_RANGE = 0.5,LEARNING_FACTOR = 0.9, PERCENTAGE_DATA = 0.7;
 
-    public NeuronalNetwork(ArrayList<Integer> topology, ArrayList<Double> inputs, ArrayList<Double> targets) {
+    public NeuronalNetwork(ArrayList<Integer> topology, List<String[]> data ) {
         this.topology = topology;
-        this.inputs = inputs;
-        this.targets = targets;
+        this.data = data;
+        this.inputs = new ArrayList<>();
+        this.targets = new ArrayList<>();
         this.neurons = new LinkedList<>();
         this.totalError = 0.0;
+        this.percentage = (int) (data.size()*PERCENTAGE_DATA);
+        initialData();
         neuronGenerator();
         connectionGenerator();
     }
 
-    public void executeTraining() {
+    //Inicializa en 0 los inputs y los targets
+    private void initialData(){
+        for (int i = 0; i < topology.get(0); i++) {
+            inputs.add(0.0);
+        }
+        for (int i = 0; i < topology.get(topology.size()-1); i++) {
+            targets.add(0.0);
+        }
+    }
+
+    public void executeTraining(){
+        int count = 0;
+        for (String[] row : data) {
+            ArrayList<Double> newInputs = new ArrayList<>();
+            ArrayList<Double>  newtargets = new ArrayList<>();
+            for (int i = 1; i < row.length; i++) {
+                if (row[i].equalsIgnoreCase("Iris-setosa")) {
+                    newtargets.add(0.0);
+                    newtargets.add(0.0);
+                } else if (row[i].equalsIgnoreCase("Iris-versicolor")) {
+                    newtargets.add(0.0);
+                    newtargets.add(1.0);
+                } else if (row[i].equalsIgnoreCase("Iris-virginica")) {
+                    newtargets.add(1.0);
+                    newtargets.add(1.0);
+                } else {
+                    newInputs.add(Double.valueOf(row[i]));
+                }
+            }
+            if (count <= percentage) {
+                replaceInputs(newInputs);
+                replaceTargets(newtargets);
+                training();//Ejecuta el entrenamiento
+            }
+            count++;
+        }
+        printTotalError();
+    }
+    //Llama a los metodos que intervienen en el entranamiento
+    private void training() {
         feedForward();//Propagacion hacia adelante
         backPropagation();//Propagacion hacia atras
         newWeights();//Actualizacion de pesos
         newBias();//Actualizacion de vias
     }
-    public void executeTest() {
+
+    public void executeTest(){
+        System.out.println("RED NEURONAL: Testeando...");
+        int count = 0;
+        for (String[] row : data) {
+            ArrayList<Double> inputs = new ArrayList<>();
+            ArrayList<Double> targets = new ArrayList<>();
+            for (int i = 1; i < row.length; i++) {
+                if (row[i].equalsIgnoreCase("Iris-setosa")) {
+                    targets.add(0.0);
+                    targets.add(0.0);
+                } else if (row[i].equalsIgnoreCase("Iris-versicolor")) {
+                    targets.add(0.0);
+                    targets.add(1.0);
+                } else if (row[i].equalsIgnoreCase("Iris-virginica")) {
+                    targets.add(1.0);
+                    targets.add(1.0);
+                } else {
+                    inputs.add(Double.valueOf(row[i]));
+                }
+            }
+            if (count > percentage) {
+                replaceInputs(inputs);
+                replaceTargets(targets);
+                test();
+            }
+            count++;
+        }
+    }
+
+    //Metodo que se usa para testear
+    private void test() {
         feedForward();//Propagacion hacia adelante
         int count1 = 1, count2 = 1;
         for (Neuron n : neurons){
@@ -43,7 +119,7 @@ public class NeuronalNetwork {
     }
 
     //Remplaza los datos de entrada y salida
-    public void replaceInputs(ArrayList<Double> inputs){
+    private void replaceInputs(ArrayList<Double> inputs){
         int aux = 0;
         for (Neuron n : neurons){
             if (n.getLayer() == 0){
@@ -53,7 +129,7 @@ public class NeuronalNetwork {
         }
     }
     //Remplaza los datos de salida
-    public void replaceTargets(ArrayList<Double> targets){
+    private void replaceTargets(ArrayList<Double> targets){
         int aux = 0;
         for (Neuron n : neurons){
             if (n.getLayer() == topology.size()-1){
@@ -147,7 +223,10 @@ public class NeuronalNetwork {
             }
         }
         totalError = total;
-        System.out.println("Error total :" + totalError);
+    }
+
+    private void printTotalError(){
+        System.out.println(totalError);
     }
 
     //Propagación hacia a tras calculando el error imputado
@@ -214,7 +293,8 @@ public class NeuronalNetwork {
 
     //Genera valores aleatorios con un ranto 0.1 a MAX_RANGE = 10
     private double randomValue() {
-        return Math.random() * (MAX_RANGE - 0.1) + 0.1;
+        //return Math.random() * (MAX_RANGE - 0.01) + 0.01;
+        return Math.random()*MAX_RANGE;
     }
 
     //Imprime las neuronas
