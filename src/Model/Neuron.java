@@ -41,24 +41,12 @@ public class Neuron {
         return frontConnections;
     }
 
-    public void setFrontConnections(LinkedList<Connection> frontConnections) {
-        this.frontConnections = frontConnections;
-    }
-
     public LinkedList<Connection> getBackConnections() {
         return backConnections;
     }
 
-    public void setBackConnections(LinkedList<Connection> backConnections) {
-        this.backConnections = backConnections;
-    }
-
     public double getValue() {
         return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
     }
 
     public double getBias() {
@@ -67,10 +55,6 @@ public class Neuron {
 
     public void setBias(double bias) {
         this.bias = bias;
-    }
-
-    public double getSumTotal() {
-        return sumTotal;
     }
 
     public void setSumTotal(double sumTotal) {
@@ -97,16 +81,12 @@ public class Neuron {
         return layer;
     }
 
-    public void setLayer(int layer) {
-        this.layer = layer;
+    public void setValue(double value) {
+        this.value = value;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String toString() {
@@ -115,7 +95,6 @@ public class Neuron {
                 .formatted(limite, this.name, this.layer, formatDouble.format(value), formatDouble.format(bias),
                         formatDouble.format(sumTotal), formatDouble.format(output), formatDouble.format(imputedError), limite));
     }
-
     public void printConnections() {
         System.out.printf("| Neurona : %-5s Conexiones -->: ", this.name);
         for (int i = 0; i < frontConnections.size(); i++) {
@@ -124,6 +103,8 @@ public class Neuron {
         if (frontConnections.isEmpty()) {
             System.out.printf("%40s  %10s", "Sin conexiones hacia adelante", " ");
         }
+        System.out.print("|  \n");
+        /*
         System.out.printf("|  \n| %-15s Conexiones <--: ", " ");
         for (int i = 0; i < backConnections.size(); i++) {
             System.out.printf(" [ %-2s = Peso: %-10s] ", backConnections.get(i).getNeuron().getName(), formatDouble.format(backConnections.get(i).getWeight()));
@@ -132,6 +113,6 @@ public class Neuron {
             System.out.printf(" %36s %15s \n", "Sin conexiones hacia atras", "|");
         } else {
             System.out.print("|\n");
-        }
+        }*/
     }
 }
