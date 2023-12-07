@@ -1,14 +1,13 @@
-package test2;
+package testCancerData;
 
 import data.CSVReader;
-import test1.NeuronalNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Execute2 {
     private static final String filePath = "src/data/Cancer.csv";
-    private static final int epoca = 500;
+    private static final int epoch = 500;
     public static void main(String[] args) {
         //================Se lee el archivo CSV================
         CSVReader csvReader = new CSVReader();
@@ -23,7 +22,7 @@ public class Execute2 {
 
         NeuronalNetwork2 network = new NeuronalNetwork2(topology, data);
         System.out.println("RED NEURONAL: Entrenando...");
-        for (int i = 0; i < epoca; i++) {
+        for (int i = 0; i < epoch; i++) {
             network.executeTraining();
         }
         System.out.println("Error Final : % "+ network.totalError*100);

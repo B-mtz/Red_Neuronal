@@ -1,4 +1,4 @@
-package test1;
+package testIrisData;
 
 import data.CSVReader;
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Execute {
     private static final String filePath = "src/data/Iris_Intercalado.csv";
-    private static final int epoca = 100;
+    private static final int epoch = 100;
     public static void main(String[] args) {
         //================Se lee el archivo CSV================
         CSVReader csvReader = new CSVReader();
@@ -23,7 +23,7 @@ public class Execute {
 
         NeuronalNetwork network = new NeuronalNetwork(topology, data);
         System.out.println("RED NEURONAL: Entrenando...");
-        for (int i = 0; i < epoca; i++) {
+        for (int i = 0; i < epoch; i++) {
             network.executeTraining();
         }
         System.out.println("Error Final : % "+ network.totalError*100);
